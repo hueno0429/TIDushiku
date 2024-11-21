@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作業指示票詳細</title>
+</head>
+<body>
+    <h1>作業指示票詳細</h1>
+    <table border="1">
+        <tr>
+            <th>作業指示票番号</th>
+            <td>{{ work_order.work_order_number }}</td>
+        </tr>
+        <tr>
+            <th>工番</th>
+            <td>{{ work_order.work_number }}</td>
+        </tr>
+        <tr>
+            <th>件名</th>
+            <td>{{ work_order.subject }}</td>
+        </tr>
+        <tr>
+            <th>製造工程パタン</th>
+            <td>{{ work_order.process_pattern }}</td>
+        </tr>
+        <tr>
+            <th>製造管理担当者</th>
+            <td>{{ work_order.manager }}</td>
+        </tr>
+        <tr>
+            <th>作業工数時間</th>
+            <td>{{ work_order.work_hours }}</td>
+        </tr>
+        <tr>
+            <th>次工程</th>
+            <td>{{ work_order.next_process }}</td>
+        </tr>
+        <tr>
+            <th>作業開始日</th>
+            <td>{{ work_order.start_date }}</td>
+        </tr>
+        <tr>
+            <th>終了予定日</th>
+            <td>{{ work_order.end_date }}</td>
+        </tr>
+    </table>
+
+    <h2>進捗状況</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>作業日</th>
+                <th>出来高（％）</th>
+                <th>当日実績</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for progress in progresses %}
+            <tr>
+                <td>{{ progress.work_date }}</td>
+                <td>{{ progress.achievement }}</td>
+                <td>{{ progress.daily_result }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">進捗データがありません。</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'work_order_list' %}">一覧に戻る</a>
+</body>
+</html>

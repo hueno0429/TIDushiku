@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作業指示票削除</title>
+</head>
+<body>
+    <h1>作業指示票削除</h1>
+    <p>以下の作業指示票を削除してもよろしいですか？</p>
+    <table border="1">
+        <tr>
+            <th>作業指示票番号</th>
+            <td>{{ work_order.work_order_number }}</td>
+        </tr>
+        <tr>
+            <th>工番</th>
+            <td>{{ work_order.work_number }}</td>
+        </tr>
+        <tr>
+            <th>件名</th>
+            <td>{{ work_order.subject }}</td>
+        </tr>
+    </table>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">削除する</button>
+        <a href="{% url 'work_order_list' %}">キャンセル</a>
+    </form>
+</body>
+</html>
