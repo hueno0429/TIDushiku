@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作業指示票</title>
-</head>
-<body>
-    <h1>作業指示票</h1>
-    <table border="1">
+{% extends 'base.html' %}
+
+{% block title %}作業指示票{% endblock %}
+
+{% block content %}
+    <h1 class="titles">作業指示票</h1>
+    {% if error_message %}
+        <p>{{ woerror }}</p>
+    {% else %}
+    <table style="margin: 0 auto;"border="1">
         <thead>
             <tr>
                 <th>作業指示票番号</th>
                 <th>工番</th>
                 <th>件名</th>
+                <th>計画数</th>
+                <th>開始日</th>
+                <th>終了日</th>
                 <th>詳細</th>
                 <th>修正</th>
                 <th>削除</th>
@@ -22,17 +25,20 @@
             {% for order in work_orders %}
             <tr>
                 <td>{{ order.work_order_number }}</td>
-                <td>{{ order.work_number }}</td>
+                <td>{{ order.work_number }} - {{ order.work_trenum }} </td>
                 <td>{{ order.subject }}</td>
-                <td><a href="{% url 'work_order_detail' order.pk %}">詳細を見る</a></td>
-                <td><a href="{% url 'edit_work_order' order.pk %}">修正する</a></td>
-                <td><a href="{% url 'delete_work_order' order.pk %}">削除する</a></td>
+                <td>{{ order.planed_value }}</td>
+                <td>{{ order.start_date }}</td>
+                <td>{{ order.end_date }}</td>
+                <td><a href="{% url 'sagyoshiji:work_order_detail' order.pk %}">詳細を見る</a></td>
+                <td><a href="{% url 'sagyoshiji:edit_work_order' order.pk %}">修正する</a></td>
+                <td><a href="{% url 'sagyoshiji:delete_work_order' order.pk %}">削除する</a></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'register_work_order' %}">新しい作業指示票を登録する</a><br>
-    <a href="{% url 'export_sagyoshijihyo_csv' %}">作業指示票をCSVでダウンロード</a><br>
-    <a href="{% url 'export_workorderprogress_csv' %}">進捗データをCSVでダウンロード</a><br>
-</body>
-</html>
+    {% endif %}
+    <a href="{% url 'sagyoshiji:register_work_order' %}">新しい作業指示票を登録する</a><br>
+    <a href="{% url 'sagyoshiji:export_sagyoshijihyo_csv' %}">作業指示票をCSVでダウンロード</a><br>
+    <a href="{% url 'sagyoshiji:export_workorderprogress_csv' %}">進捗データをCSVでダウンロード</a><br>
+{% endblock %}

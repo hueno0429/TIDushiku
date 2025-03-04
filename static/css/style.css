@@ -1,0 +1,78 @@
+/*style.css*/
+/*coded T.Saito*/
+
+body{margin:0; background-color: #ebf2f3;}
+/*header*/
+header{width:auto; background:#5dccfa; padding:5px; padding-bottom: 10px; font-size: x-large; display:flex; justify-content: space-between; align-items: center; position: fixed; top:0; left:0; right:0; z-index: 1000;}
+header button{border:none; font-size: large; background:none; border-radius: 5px; padding:5px 10px; color: rgb(75, 75, 75); justify-content: space-between;}
+header button:hover{background:#c5f0ff;}
+header .hm{border:none; font-size: large; text-decoration: none; background:none; border-radius: 5px; padding:10px 15px; color: rgb(75, 75, 75); justify-content: space-between;}
+header .hm:hover{background:#c5f0ff;}
+header .hsu{padding: 0px;}
+
+/*component*/
+.mgform{border-radius: 5px; padding:10px 20px; outline:none; border:2px solid dimgray; padding:5px; font-size:large;}
+.mgform:focus{border:2px solid dimgray;}
+.mgform:hover{background:silver;}
+.mgforms{border-radius: 5px; padding:10px 20px; outline:none;  outline: none; padding:5px; font-size:large;}
+textarea{resize:none; }
+.taform{padding:3px 5px; border-radius: 5px; border:1px solid gray;}
+.taform textarea{display:inline; width:80%; resize:none; border:none; outline: none; }
+
+/* Tables */
+table{border-collapse: collapse; } table td{padding:5px;}
+
+/*footer*/
+.sents{position:fixed; bottom:0; left:0; right:0; font-size: large; padding:5px 10px; background:silver; text-align: right;}
+.sents button{background:black; color:white; font-size: medium; border-radius: 5px; border:none; padding:5px 10px;}
+.sents button:hover{background:rgb(132, 132, 132); color:black; font-size: medium; border-radius: 5px; border:none;}
+.sents a{background:black; color:white; font-size: medium; text-decoration: none; border-radius: 5px; border:none; padding:5px 10px;}
+.sents a:hover{background:rgb(132, 132, 132); color:black; font-size: medium; border-radius: 5px; border:none;}
+
+/* input */
+input[type="text"], input[type="date"], input[type="time"], input[type="number"] textarea .sel {
+    width: 200px; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;
+}
+.edit-link{margin-top: 10px; width:120px; text-align: center; display:block; background:black; color:white; font-size: medium; border-radius: 5px; border:none; padding:5px 10px;}
+.edit-link:hover{background:rgb(132, 132, 132); color:black; font-size: medium; border-radius: 5px; border:none;}
+.sub_bt {
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.sub_bt:hover {
+    background-color: #555;
+}
+
+/* Header icon */
+.h_icon {
+    width: 30px;
+    height: 30px;
+    position:relative;
+    top: 7px;
+}
+/* dashboard work_pad */
+.wpad_b{width:auto; margin:0; height:300px; padding:10px 10px; overflow:auto;}
+.wpad_ba{width:auto;height:250px; padding:5px;}
+.wpad{display:inline-block; width:150px; height:250px; padding:0px ; cursor: pointer; overflow:hidden; border-top:10px solid #5dccfa; text-align:center; border-radius:10px; border:1px solid gray; box-shadow:1px 1px 1px 1px gray; }
+.wpad:hover{background:snow;}
+.wpad_m{width:90px; height:90px;}
+.wpad_ma{width:200px; background:skyblue; height:10px;}
+
+.wpad_fo{font-size:small; font-weight:bold;}
+.wpad_tb{text-decoration:none; width:200px; color:white; background:rgb(235, 0, 235); text-align:center; border:1px solid whitesmoke; border-radius:10px; font-size:medium; width:150px; padding:5px 20px;}
+.wpad_tb:hover{background:white; border:1px solid gray; color:dimgray;}
+
+/* page titles */
+.titles{width:300px; font-size: x-large; font-weight: 700; border-bottom:2px solid #555; border-radius: 5px; text-align: center;}
+
+/* tabs */
+.tabz{display:inline-block;  border-radius: 5px; margin: 10px 0; padding:8px 5px;}
+.tab{width:300px; font-size: larger;  cursor:  pointer;  justify-content: space-between; padding: 10px 20px; border-radius: 3px; background-color: #dcdcdc;}
+.tab:hover{background-color: #9c9c9c;}
+.tab.active{background-color: #eaeaea; border:1px solid dimgray;}
+.tab_content{display: none; padding: 10px; border-radius: 5px; }
+.tab_content.active{display: block;}

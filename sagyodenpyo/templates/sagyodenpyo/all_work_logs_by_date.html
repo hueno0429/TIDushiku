@@ -1,12 +1,12 @@
-{% extends 'sagyodenpyo/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}全体の作業履歴{% endblock %}
 
 {% block content %}
-<h1>全体の作業履歴</h1>
+<h1 class="titles">全体の作業履歴</h1>
 {% for date, logs in grouped_logs.items %}
-    <h2>{{ date }}</h2>
-    <table border="1">
+    <h2 style="text-align:center;">{{ date }}</h2>
+    <table style="margin: 0 auto;"border="1">
         <thead>
             <tr>
                 <th>従業員名</th>

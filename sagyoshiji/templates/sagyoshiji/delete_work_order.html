@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作業指示票削除</title>
-</head>
-<body>
-    <h1>作業指示票削除</h1>
+{% extends 'base.html' %}
+
+{% block title %}作業指示票削除{% endblock %}
+
+{% block content %}
+    <h1 class="titles">作業指示票削除</h1>
     <p>以下の作業指示票を削除してもよろしいですか？</p>
     <table border="1">
         <tr>
@@ -25,7 +22,6 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit">削除する</button>
-        <a href="{% url 'work_order_list' %}">キャンセル</a>
+        <a href="{% url 'sagyoshiji:work_order_list' %}">キャンセル</a>
     </form>
-</body>
-</html>
+{% endblock %}

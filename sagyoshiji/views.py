@@ -2,43 +2,52 @@
 
 # Create your views here.
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .forms import WorkOrderForm
 from .models import WorkOrder
 
+@login_required
 def register_work_order(request):
     if request.method == 'POST':
         form = WorkOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('work_order_list')
+            return redirect('sagyoshiji:work_order_list')
+        
     else:
         form = WorkOrderForm()
     return render(request, 'sagyoshiji/register_work_order.html', {'form': form})
 
+@login_required
 def work_order_list(request):
     work_orders = WorkOrder.objects.all()
+    if not work_orders.exists():
+        return render(request, 'sagyoshiji/work_order_list.html', {'woerror': '作業指示表のデータが存在しません。登録してください。'})
     return render(request, 'sagyoshiji/work_order_list.html', {'work_orders': work_orders})
 
 from django.shortcuts import render, get_object_or_404
 from .models import WorkOrder
 
+@login_required
 def work_order_detail(request, pk):
     # 指定されたID (pk) の作業指示票を取得
     work_order = get_object_or_404(WorkOrder, pk=pk)
     return render(request, 'sagyoshiji/work_order_detail.html', {'work_order': work_order})
 
 # 削除機能のビュー
+@login_required
 def delete_work_order(request, pk):
     work_order = get_object_or_404(WorkOrder, pk=pk)
     if request.method == "POST":
         work_order.delete()
-        return redirect('work_order_list')
+        return redirect('sagyoshiji:work_order_list')
     return render(request, 'sagyoshiji/delete_work_order.html', {'work_order': work_order})
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import WorkOrder
 from .forms import WorkOrderForm, WorkOrderProgressFormSet
 
+@login_required
 def register_work_order(request):
     if request.method == 'POST':
         form = WorkOrderForm(request.POST)
@@ -46,7 +55,7 @@ def register_work_order(request):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
-            return redirect('work_order_list')
+            return redirect('sagyoshiji:work_order_list')
     else:
         form = WorkOrderForm()
         formset = WorkOrderProgressFormSet(instance=WorkOrder())
@@ -56,6 +65,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import WorkOrder
 from .forms import WorkOrderForm, WorkOrderProgressFormSet
 
+@login_required
 def edit_work_order(request, pk):
     # 修正する作業指示票を取得
     work_order = get_object_or_404(WorkOrder, pk=pk)
@@ -66,7 +76,7 @@ def edit_work_order(request, pk):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
-            return redirect('work_order_list')
+            return redirect('sagyoshiji:work_order_list')
     else:
         form = WorkOrderForm(instance=work_order)
         formset = WorkOrderProgressFormSet(instance=work_order)
@@ -76,6 +86,7 @@ def edit_work_order(request, pk):
 #from django.shortcuts import render, get_object_or_404
 #from .models import WorkOrder
 
+@login_required
 def work_order_detail(request, pk):
     # 指定された作業指示票とその進捗データを取得
     work_order = get_object_or_404(WorkOrder, pk=pk)
@@ -91,7 +102,7 @@ from django.http import HttpResponse
 from .models import WorkOrder  # 作業指示票モデルをインポート
 from django.contrib.auth.decorators import login_required
 
-#@login_required
+@login_required
 def export_sagyoshijihyo_csv(request):
     # CSVレスポンス設定
     response = HttpResponse(content_type='text/csv')
@@ -176,3 +187,5 @@ def export_workorderprogress_csv(request):
         ])
 
     return response
+
+

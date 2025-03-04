@@ -11,32 +11,32 @@ class Employee(models.Model):
 
 class WorkLog(models.Model):
     WORK_CODE_CHOICES = [
-        ('001', '材料受け入れ'),
-        ('002', 'ノコ切断'),
-        ('003', 'ガス切断'),
-        ('004', 'G仕上げ'),
-        ('005', '罫書・仮付け溶接'),
-        ('006', '段取り替え'),
-        ('007', '製品横持ち'),
-        ('008', '本溶接'),
-        ('009', 'ガス歪取り'),
-        ('010', 'プレス歪取り'),
-        ('011', 'ギザ加工'),
-        ('012', '中間検査'),
-        ('013', 'シャーリング切断'),
-        ('014', 'プレス加工'),
-        ('015', '曲げ加工'),
-        ('016', 'ＮＣ加工'),
-        ('017', '穴あけタップ手加工'),
-        ('018', 'パネル組立・養生'),
-        ('019', 'レーザー加工'),
-        ('402', '塗装・タッチアップ'),
-        ('602', '出荷'),
-        ('701', '作図'),
-        ('903', '現場出張'),
-        ('908', '講習・試験'),
-        ('909', '打ち合せ・会議'),
-        ('999', 'その他'),
+        ('001', '001'),
+        ('002', '002'),
+        ('003', '003'),
+        ('004', '004'),
+        ('005', '005'),
+        ('006', '006'),
+        ('007', '007'),
+        ('008', '008'),
+        ('009', '009'),
+        ('010', '010'),
+        ('011', '011'),
+        ('012', '012'),
+        ('013', '013'),
+        ('014', '014'),
+        ('015', '015'),
+        ('016', '016'),
+        ('017', '017'),
+        ('018', '018'),
+        ('019', '019'),
+        ('402', '402'),
+        ('602', '602'),
+        ('701', '701'),
+        ('903', '903'),
+        ('908', '908'),
+        ('909', '909'),
+        ('999', '999'),
     ]
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="work_logs")
     work_number = models.CharField("工番", max_length=10)
@@ -48,3 +48,21 @@ class WorkLog(models.Model):
     def __str__(self):
         return f"{self.employee.name} - {self.work_number} ({self.date})"
 
+#display user name(all)
+from django.contrib.auth.models import User
+
+users = User.objects.all().values('id', 'username', 'first_name', 'last_name')
+
+for user in users:
+    full_name = f"{user['first_name']} {user['last_name']}"
+    print(f"ユーザID：{user['id']}, ユーザ名：{user['username']},  フルネーム：({full_name})")
+
+#display user name(select)
+def get_full_name(user_name):
+    try:
+        user = User.objects.get(username=user_name)
+        full_name = f"{user.first_name} {user.last_name}"
+        print(f"ユーザ名：{user.username}, フルネーム：{full_name}")
+    except User.DoesNotExist:
+        print(f"指定したIDのユーザIDのユーザは存在しません.")
+get_full_name('tid100')

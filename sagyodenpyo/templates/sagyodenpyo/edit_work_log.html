@@ -1,13 +1,13 @@
-{% extends 'sagyodenpyo/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}作業伝票修正{% endblock %}
 
 {% block content %}
-<h1>作業伝票修正</h1>
+<h1 class="titles">作業伝票修正</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">保存</button>
+    <button type="submit" class="sub_bt">保存</button>
 </form>
-<a href="{% url 'work_log_list' %}">作業履歴を見る</a>
+<a href="{% url 'sagyodenpyo:work_logs' %}" class="edit-link">作業履歴を見る</a>
 {% endblock %}

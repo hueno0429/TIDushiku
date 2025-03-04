@@ -1,7 +1,10 @@
 from django.urls import path
 from . import views
 
+app_name = 'sagyoshiji'
+
 urlpatterns = [
+    #path('',views.home, name='home'), # root URL  
     path('register/', views.register_work_order, name='register_work_order'),
     path('list/', views.work_order_list, name='work_order_list'),
     path('detail/<int:pk>/', views.work_order_detail, name='work_order_detail'),

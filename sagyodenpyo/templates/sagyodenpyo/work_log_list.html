@@ -1,10 +1,11 @@
-{% extends 'sagyodenpyo/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}個人の作業履歴{% endblock %}
 
 {% block content %}
-<h1>個人の作業履歴</h1>
-<table border="1">
+
+<h1 class="titles">個人の作業履歴</h1>
+<table style="margin: 0 auto; border-collapse: collapse; padding:5px;"border="1">
     <thead>
         <tr>
             <th>日付</th>
@@ -23,11 +24,11 @@
             <td>{{ log.subject }}</td>
             <td>{{ log.get_work_code_display }}</td>
             <td>{{ log.work_hours }}</td>
-            <td><a href="{% url 'edit_work_log' log.pk %}">修正</a></td>
+            <td><a href="{% url 'sagyodenpyo:edit_work_log' log.pk %}">修正</a></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'log_work' %}">新しい作業伝票を入力</a>
-<a href="{% url 'export_work_logs_csv' %}">CSVをダウンロード</a>
+<a href="{% url 'sagyodenpyo:log_work' %}">新しい作業伝票を入力</a>
+<a href="{% url 'sagyodenpyo:export_work_logs_csv' %}">CSVをダウンロード</a>
 {% endblock %}

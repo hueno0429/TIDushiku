@@ -3,12 +3,31 @@ from django.contrib.auth.decorators import login_required
 from .models import WorkLog
 from .forms import WorkLogForm
 
+
 from django.contrib.auth.views import LogoutView
 class CustomLogoutView(LogoutView):
     def get(self, request, *args, **kwargs):
         """GET リクエストでもログアウトを許可"""
         return self.post(request, *args, **kwargs)
 
+@login_required
+def work_logs(request):
+    try:
+        employee = request.user.employee
+    except Employee.DoesNotExist:
+        return HttpResponseForbidden("このユーザーには対応する従業員情報がありません。管理者に問い合わせてください。")
+
+    work_logs = WorkLog.objects.filter(employee=employee).order_by('-date')
+
+    # 全ての作業履歴を日付順に取得
+    awork_logs = WorkLog.objects.select_related('employee').order_by('date', 'employee__name')
+
+    # 日付ごとにグループ化
+    grouped_logs = {}
+    for date, logs in groupby(awork_logs, key=lambda log: log.date):
+        grouped_logs[date] = list(logs)
+
+    return render(request, 'sagyodenpyo/view_wlogs.html', {'work_logs': work_logs, 'grouped_logs': grouped_logs})
 
 @login_required
 def log_work(request):
@@ -18,7 +37,7 @@ def log_work(request):
             work_log = form.save(commit=False)
             work_log.employee = request.user.employee  # ログイン中の従業員を紐付け
             work_log.save()
-            return redirect('work_log_list')
+            return redirect('sagyodenpyo:work_log_list')
     else:
         form = WorkLogForm()
     return render(request, 'sagyodenpyo/log_work.html', {'form': form})
@@ -30,7 +49,7 @@ def edit_work_log(request, pk):
         form = WorkLogForm(request.POST, instance=work_log)
         if form.is_valid():
             form.save()
-            return redirect('work_log_list')
+            return redirect('sagyodenpyo:work_log_list')
     else:
         form = WorkLogForm(instance=work_log)
     return render(request, 'sagyodenpyo/edit_work_log.html', {'form': form})

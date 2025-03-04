@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作業指示票修正</title>
-</head>
-<body>
-    <h1>作業指示票修正: {{ work_order.work_order_number }}</h1>
+{% extends 'base.html' %}
+
+{% block title %}作業指示票修正{% endblock %}
+
+{% block content %}
+    <h1  class="titles">作業指示票修正: {{ work_order.work_order_number }}</h1>
     <form method="post">
         {% csrf_token %}
-        <h2>作業指示票情報</h2>
+        <h2 style="border: 2px solid black; padding: 10px;text-align: center;">作業指示票情報</h2>
         {{ form.as_p }}
-        <h2>作業進捗データ</h2>
+        <h2 style="border: 2px solid black; padding: 10px;text-align: center;">作業進捗データ</h2>
         {{ formset.management_form }}
         <table>
             <thead>
@@ -35,6 +32,5 @@
         </table>
         <button type="submit">修正を保存</button>
     </form>
-    <a href="{% url 'work_order_list' %}">作業指示票一覧に戻る</a>
-</body>
-</html>
+    <a href="{% url 'sagyoshiji:work_order_list' %}">作業指示票一覧に戻る</a>
+{% endblock %}

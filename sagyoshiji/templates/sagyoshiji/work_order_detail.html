@@ -1,20 +1,25 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作業指示票詳細</title>
-</head>
-<body>
-    <h1>作業指示票詳細</h1>
-    <table border="1">
+{% extends 'base.html' %}
+
+{% block title %}作業指示票詳細{% endblock %}
+
+{% block content %}
+    <h1 class="titles">作業指示票詳細</h1>
+    <table style="margin: 0 auto;"border="1">
         <tr>
             <th>作業指示票番号</th>
             <td>{{ work_order.work_order_number }}</td>
         </tr>
         <tr>
+            <th>発行日</th>
+            <td>{{ work_order.release_date }}</td>
+        </tr>
+        <tr>
             <th>工番</th>
             <td>{{ work_order.work_number }}</td>
+        </tr>
+        <tr>
+            <th>枝番</th>
+            <td>{{ work_order.work_trenum }}</td>
         </tr>
         <tr>
             <th>件名</th>
@@ -27,6 +32,10 @@
         <tr>
             <th>製造管理担当者</th>
             <td>{{ work_order.manager }}</td>
+        </tr>
+        <tr>
+            <th>製作グループ</th>
+            <td>{{ work_order.work_group }}</td>
         </tr>
         <tr>
             <th>作業工数時間</th>
@@ -44,10 +53,22 @@
             <th>終了予定日</th>
             <td>{{ work_order.end_date }}</td>
         </tr>
+        <tr>
+            <th>作業種別</th>
+            <td>{{ work_order.work_type }}</td>
+        </tr>
+        <tr>
+            <th>作業範囲</th>
+            <td>{{ work_order.work_range }}</td>
+        </tr>
+        <tr>
+            <th>計画数</th>
+            <td>{{ work_order.planed_value }}</td>
+        </tr>
     </table>
 
-    <h2>進捗状況</h2>
-    <table border="1">
+    <h1 class="titles">進捗状況</h1>
+    <table style="margin: 0 auto;"border="1">
         <thead>
             <tr>
                 <th>作業日</th>
@@ -70,6 +91,5 @@
         </tbody>
     </table>
 
-    <a href="{% url 'work_order_list' %}">一覧に戻る</a>
-</body>
-</html>
+    <a href="{% url 'sagyoshiji:work_order_list' %}">一覧に戻る</a>
+{% endblock %}

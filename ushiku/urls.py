@@ -20,9 +20,12 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('sagyodenpyo/', include('sagyodenpyo.urls')),
-    path('', include('sagyoshiji.urls')),
-    path('login/', auth_views.LoginView.as_view(template_name='sagyodenpyo/login.html'), name='login'),
+    path('sagyodenpyo/', include('sagyodenpyo.urls', namespace='sagyodenpyo')),
+    path('sagyoshiji/', include('sagyoshiji.urls'), name='sagyoshiji'),
+    path('docs/', include('docs.urls', namespace='docs')),
+    #path('home/', include('home.urls', namespace='home')),
+    path('', include('home.urls', namespace='home')),
+    path('login/', auth_views.LoginView.as_view(template_name='home/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),  # 標準の LogoutView を使用
 ]
 
