@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from sagyodenpyo.models import WorkLog
-from sagyoshiji.models import WorkOrder
+from sagyoshiji.models import WorkOrder, WorkOrderProgress
 from sagyodenpyo.forms import WorkLogForm
 
 import os
@@ -21,5 +21,9 @@ def home(request):
         return HttpResponseForbidden('このユーザーには対応する従業員情報がありません。管理者に問い合わせてください。')
     
     work_logs = WorkLog.objects.filter(employee=employee).order_by('-date')
+    work_progress = WorkOrderProgress.objects.all()
+    sum_work_progress = sum(work_progress.values_list('achievement', flat=True))
     work_orders = WorkOrder.objects.all()
-    return render(request, 'home/dashboard.html', {'work_logs': work_logs, 'work_orders': work_orders})
+    work_order_count = work_orders.count()
+    return render(request, 'home/dashboard.html', {'work_logs': work_logs, 'work_orders': work_orders, 'sum_work_progress': sum_work_progress, 'work_order_count':work_order_count })
+

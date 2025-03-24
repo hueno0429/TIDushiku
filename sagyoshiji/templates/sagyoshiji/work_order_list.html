@@ -4,14 +4,18 @@
 
 {% block content %}
     <h1 class="titles">作業指示票</h1>
+    <a href="{% url 'sagyoshiji:register_work_order' %}">新しい作業指示票を登録する</a>　
     {% if error_message %}
         <p>{{ woerror }}</p>
     {% else %}
+    <a href="{% url 'sagyoshiji:export_sagyoshijihyo_csv' %}">作業指示票をCSVでダウンロード</a>　
+    <a href="{% url 'sagyoshiji:export_workorderprogress_csv' %}">進捗データをCSVでダウンロード</a>
     <table style="margin: 0 auto;"border="1">
         <thead>
             <tr>
                 <th>作業指示票番号</th>
                 <th>工番</th>
+                <th>枝番</th>
                 <th>件名</th>
                 <th>計画数</th>
                 <th>開始日</th>
@@ -25,20 +29,19 @@
             {% for order in work_orders %}
             <tr>
                 <td>{{ order.work_order_number }}</td>
-                <td>{{ order.work_number }} - {{ order.work_trenum }} </td>
+                <td>{{ order.work_number }}</td>
+                <td>{{ order.work_trenum }}</td>
                 <td>{{ order.subject }}</td>
                 <td>{{ order.planed_value }}</td>
                 <td>{{ order.start_date }}</td>
                 <td>{{ order.end_date }}</td>
                 <td><a href="{% url 'sagyoshiji:work_order_detail' order.pk %}">詳細を見る</a></td>
                 <td><a href="{% url 'sagyoshiji:edit_work_order' order.pk %}">修正する</a></td>
-                <td><a href="{% url 'sagyoshiji:delete_work_order' order.pk %}">削除する</a></td>
+                <td><a href="{% url 'sagyoshiji:delete_work_order' order.pk %}" style="text-decoration: none;">🗑️</a></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% endif %}
-    <a href="{% url 'sagyoshiji:register_work_order' %}">新しい作業指示票を登録する</a><br>
-    <a href="{% url 'sagyoshiji:export_sagyoshijihyo_csv' %}">作業指示票をCSVでダウンロード</a><br>
-    <a href="{% url 'sagyoshiji:export_workorderprogress_csv' %}">進捗データをCSVでダウンロード</a><br>
+
 {% endblock %}

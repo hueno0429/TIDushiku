@@ -1,7 +1,7 @@
 #from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import WorkOrderForm
 from .models import WorkOrder
@@ -21,18 +21,19 @@ def register_work_order(request):
 @login_required
 def work_order_list(request):
     work_orders = WorkOrder.objects.all()
+    work_progress = WorkOrderProgress.objects.all()
     if not work_orders.exists():
         return render(request, 'sagyoshiji/work_order_list.html', {'woerror': '作業指示表のデータが存在しません。登録してください。'})
     return render(request, 'sagyoshiji/work_order_list.html', {'work_orders': work_orders})
 
-from django.shortcuts import render, get_object_or_404
-from .models import WorkOrder
 
 @login_required
 def work_order_detail(request, pk):
     # 指定されたID (pk) の作業指示票を取得
     work_order = get_object_or_404(WorkOrder, pk=pk)
-    return render(request, 'sagyoshiji/work_order_detail.html', {'work_order': work_order})
+    work_progress = WorkOrderProgress.objects.all()
+    work_percentage = work_progress.daily_result()
+    return render(request, 'sagyoshiji/work_order_detail.html', {'work_order': work_order,'work_percentage':work_percentage})
 
 # 削除機能のビュー
 @login_required
@@ -71,11 +72,18 @@ def edit_work_order(request, pk):
     work_order = get_object_or_404(WorkOrder, pk=pk)
     
     if request.method == 'POST':
-        form = WorkOrderForm(request.POST, instance=work_order)
-        formset = WorkOrderProgressFormSet(request.POST, instance=work_order)
+        form = WorkOrderForm(request.POST or None, instance=work_order)
+        formset = WorkOrderProgressFormSet(request.POST or None, instance=work_order)
         if form.is_valid() and formset.is_valid():
             form.save()
-            formset.save()
+            instances = formset.save(commit=False)
+            for instance in instances:
+                # 必要なフィールドが適切に入力されているか確認
+                if instance.daily_result is not None and instance.work_date :
+                    instance.save()
+            # 削除が選択されたインスタンスを削除
+            for instance in formset.deleted_objects:
+                instance.delete()
             return redirect('sagyoshiji:work_order_list')
     else:
         form = WorkOrderForm(instance=work_order)
@@ -96,7 +104,7 @@ def work_order_detail(request, pk):
         'progresses': progresses
     })
 
-#CSV download support
+#CSV and PDF download support
 import csv
 from django.http import HttpResponse
 from .models import WorkOrder  # 作業指示票モデルをインポート
@@ -188,4 +196,25 @@ def export_workorderprogress_csv(request):
 
     return response
 
+#import library for create PDF / PDFを生成するためのライブラリを取得
+#from weasyprint import HTML #デバイスがわで用意する必要あり
+from django.template.loader import get_template
+
+@login_required
+def order_detail_to_pdf(request, pk):
+    try:
+        worder = get_object_or_404(WorkOrder, pk=pk)
+    except WorkOrder.DoesNotExist or WorkOrderProgress.DoesNotExist:
+        return HttpResponse('WorkOrder can not found.', status=404)
+    
+    html_content = get_template("sagyoshiji/work_order_detail.html")
+    context = {'worder':worder}
+    htmls = html_content.render(context)
+
+    # generate pdf
+    pdf_file = HTML(string=htmls).write_pdf()
+
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'filename="作業指示票_{worder.subject}"'
+    return response
 

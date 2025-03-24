@@ -16,7 +16,11 @@ class WorkOrder(models.Model):
     work_type = models.CharField('作業種別', max_length=2, default=0)
     work_range = models.CharField('作業範囲', max_length=200, default="例) P1~P27の エ1~エ3 製造票のコピー")
     planed_value = models.DecimalField('計画数', max_digits=3, decimal_places=0, default=0)
-
+    syounin_check = models.CharField('承認', max_length=30, default="")
+    publish_check = models.CharField('作成', max_length=30, default="")
+    workset_check = models.CharField('工数設定', max_length=30, default="")
+    buy_check = models.CharField('購買確認', max_length=30, default="")
+    recive_check = models.CharField('受け取り確認', max_length=30, default="")
     
 
     def __str__(self):
@@ -29,11 +33,12 @@ class WorkOrder(models.Model):
 class WorkOrderProgress(models.Model):
     work_order = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name="progresses")
     work_date = models.DateField("作業日")
-    achievement = models.DecimalField("出来高（％）", max_digits=3, decimal_places=0)
+    achievement = models.DecimalField("出来高（％）", max_digits=3, decimal_places=0,default=0)
     daily_result = models.DecimalField("当日実績", max_digits=2, decimal_places=0)
 
     def __str__(self):
         return f"{self.work_order} - {self.work_date}"
+        
 
     class Meta:
         verbose_name = "作業進捗"

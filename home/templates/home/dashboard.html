@@ -13,9 +13,69 @@
             background: rgb(214, 214, 214);
             border-radius: 5px;
             width:700px;
-        } .gta label{font-size: x-large; font-weight: bold;} .gta img{width:600px; height:350px;}
+        } .gta label{font-size: x-large; font-weight: bold;} .gta img{width:600px; height:310px;}
+
+        .s_container{width:500px; height:300px; position:relative; overflow: hidden; border-radius: 10px;}
+        .card{width:100%; height:100%; padding:5px 10px; padding-bottom: 10px; position: absolute; top:0; left:100%; background:rgb(0, 255, 242); border:1px solid rgb(0, 255, 242);  align-items: center; justify-content: center; transition: left 0.5s ease-in-out;}
+        .act_card{left:0;}
     </style>
 <div align="center">
+{% if not work_orders %}
+<div style="width:70%; padding:5px 10px; background:rgb(188, 216, 255); padding-bottom:20px; border-radius: 10px;">
+    <h2>まだ作業指示表が存在しません。　作成してください。</h2>
+    <a href="{% url 'sagyoshiji:register_work_order' %}">ここから作成</a>
+</div>
+{% else %}
+    <div class="s_container">
+        {% for order in work_orders %}
+            <div class="card act_card">
+                <p align="left" style="font-size: small;">作業指示表番号：{{ order.work_order_number }}　工番：{{ order.work_number }}　枝番：{{ order.work_trenum }}</p>
+                <h3>件名：{{ order.subject }}</h3>
+                <p style="font-size: small;">作業開始日：{{ order.start_date }}　作業終了日：{{ order.end_date }}</p>
+                <a href="{% url 'sagyoshiji:work_order_detail' order.pk %}" class="sub_bt">詳細を見る</a>
+                <br><br>
+                <!--h4>作業進捗</h4>
+                
+                <div class="progress-container" align="left">
+                    
+                    
+                        <div class="progress-bar" id="bar-{{ progress.achievement }}"></div>
+                    
+                <script>
+                            document.getElementById("bar-{{ progress.achievement }}").style.width = "{{ progress.achievement }}%";
+                            document.getElementById("bar-{{ progress.achievement }}").textContent = "{{ progress.achievement }}%";
+                </script>
+                
+                    
+                </div>
+                    <style>
+                        .progress-container {
+                            position: relative;
+                            left:0;
+                            width: 80%;
+                            background-color: #f1f1f1;
+                        }
+
+                        .progress-bar {
+                            position: relative;
+                            left:0;
+                            width: 0%;
+                            height: 30px;
+                            text-align: center;
+                            line-height: 30px;
+                            background:red;
+                            color: white;
+                        }
+                    </style>
+                </p-->
+            </div>
+        {% endfor %}
+    </div><br>
+    {% if not work_order_count >= 1 %}
+    <button onclick="prevCard()">＜前へ</button>　<button onclick="nextCard()">次へ＞</button>
+    {% endif %}
+{% endif %}
+<br>
 <h2>Work Pad</h2>
 <div class="wpad_b">
 
@@ -37,38 +97,22 @@
     {% endif %}
 </div></div>
 
-<h3 align="center">作業指示サマリー</h3>
-<table style="margin: 0 auto; border-collapse: collapse;"border="1">
-    <thead>
-        <tr>
-            <th>作業指示票番号</th>
-            <th>工番</th>
-            <th>件名</th>
-            <th>詳細</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for order in work_orders %}
-        <tr>
-            <td>{{ order.work_order_number }}</td>
-            <td>{{ order.work_number }}</td>
-            <td>{{ order.subject }}</td>
-            <td><a href="{% url 'sagyoshiji:work_order_detail' order.pk %}">詳細を見る</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
 
-<h3 align="center">個人の作業履歴</h3>
+<h2 align="center">個人の作業履歴</h2>
+{% if not work_logs %}
+<div style="width:70%; padding:5px 10px; background:rgb(188, 255, 235); padding-bottom:20px; border-radius: 10px;">
+    <h2>まだ作業履歴が存在しません。</h2>
+</div>
+{% else %}
 <table style="margin: 0 auto; border-collapse: collapse;"border="1">
     <thead>
         <tr>
             <th>日付</th>
             <th>工番</th>
+            <th>枝番</th>
             <th>件名</th>
             <th>作業コード</th>
             <th>作業時間</th>
-            <th>修正</th>
         </tr>
     </thead>
     <tbody>
@@ -76,14 +120,39 @@
         <tr>
             <td>{{ log.date }}</td>
             <td>{{ log.work_number }}</td>
+            <td>{{ log.work_trenum }}</td>
             <td>{{ log.subject }}</td>
             <td>{{ log.get_work_code_display }}</td>
             <td>{{ log.work_hours }}</td>
-            <td><a href="{% url 'sagyodenpyo:edit_work_log' log.pk %}">修正</a></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
 </div></div>
+<script>
+    let currentIndex = 0;
+    const cards = document.querySelectorAll('.card');
+    const total_cards = cards.length;
+
+    function showCard(index){
+        cards.forEach((card, i) => {
+            card.classList.remove('act_card');
+            card.style.left = (i === index) ? '0' : '100%';
+        });
+        cards[index].classList.add('act_card');
+    }
+
+    function nextCard(){
+        currentIndex = (currentIndex + 1) % total_cards;
+        showCard(currentIndex);
+    }
+
+    function prevCard(){
+        currentIndex = (currentIndex - 1 + total_cards) % total_cards;
+        showCard(currentIndex);
+    }
+    setInterval(nextCard, 10000);
+</script>
 <br>
 {% endblock %}

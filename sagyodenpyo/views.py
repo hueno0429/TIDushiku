@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now, timedelta
+from django.db.models import Sum
+from collections import defaultdict
 from .models import WorkLog
 from .forms import WorkLogForm
+import datetime
 
 
 from django.contrib.auth.views import LogoutView
@@ -16,18 +20,61 @@ def work_logs(request):
         employee = request.user.employee
     except Employee.DoesNotExist:
         return HttpResponseForbidden("このユーザーには対応する従業員情報がありません。管理者に問い合わせてください。")
+    
+    initial_date = now().date()
 
-    work_logs = WorkLog.objects.filter(employee=employee).order_by('-date')
+    selected_date_str = request.GET.get('selected_date')
+    if selected_date_str:
+        try:
+            selected_date = datetime.datetime.strptime(selected_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            selected_date = initial_date
 
+    else:
+        selected_date = initial_date
+
+    start_date = selected_date
+    end_date = start_date + timedelta(days=7)
+    
+
+    work_logs = WorkLog.objects.filter(employee=employee,date__range=(start_date,end_date)).order_by('-date')
+    
     # 全ての作業履歴を日付順に取得
-    awork_logs = WorkLog.objects.select_related('employee').order_by('date', 'employee__name')
+    awork_logs = WorkLog.objects.select_related('employee').filter(date__range=(start_date,end_date)).order_by('date', 'employee__name')
+    awork_logs_all = WorkLog.objects.select_related('employee').order_by('date','employee__name')
+    #work_hours and work_minutes
+    total_work_hours = work_logs.aggregate(total_hours=Sum('work_hours'),total_minute=Sum('work_minute'))
+
+    #calucration of total work hours
+    total_hours = total_work_hours['total_hours'] or 0
+    total_minute = total_work_hours['total_minute'] or 0
+    total_hours += total_minute // 60
+    remining_minutes = total_minute % 60
+
+    #作業伝票個数表示
+    count_logs = work_logs.count()
+
 
     # 日付ごとにグループ化
     grouped_logs = {}
+    grouped_logs_all = {}
     for date, logs in groupby(awork_logs, key=lambda log: log.date):
         grouped_logs[date] = list(logs)
+    for date, logs in groupby(awork_logs_all, key=lambda log:log.date):
+        grouped_logs_all[date] = list(logs)
 
-    return render(request, 'sagyodenpyo/view_wlogs.html', {'work_logs': work_logs, 'grouped_logs': grouped_logs})
+    context = {
+        'work_logs': work_logs,
+        'grouped_logs': grouped_logs,
+        'total_hours': total_hours,
+        'total_minutes': total_minute,
+        'remining_minutes': remining_minutes,
+        'cout_logs': count_logs,
+        'start_date': start_date,
+        'end_date': end_date,
+    }
+
+    return render(request, 'sagyodenpyo/view_wlogs.html', context)
 
 @login_required
 def log_work(request):
@@ -49,7 +96,7 @@ def edit_work_log(request, pk):
         form = WorkLogForm(request.POST, instance=work_log)
         if form.is_valid():
             form.save()
-            return redirect('sagyodenpyo:work_log_list')
+            return redirect('sagyodenpyo:work_logs')
     else:
         form = WorkLogForm(instance=work_log)
     return render(request, 'sagyodenpyo/edit_work_log.html', {'form': form})
@@ -101,7 +148,7 @@ def export_work_logs_csv(request):
     writer = csv.writer(response, quoting=csv.QUOTE_MINIMAL)
 
     # ヘッダー行（日本語）
-    header = ['従業員名', '工番', '件名', '作業コード', '作業時間', '作業日']
+    header = ['従業員名', '工番', '枝番', '件名', '作業コード', '作業時間(時間)', '作業時間(分)', '作業日']
     response.write(",".join(header).encode('shift_jis') + b"\r\n")
 
     # データ行
@@ -110,9 +157,11 @@ def export_work_logs_csv(request):
         row = [
             log.employee.name,
             log.work_number,
+            log.work_trenum,
             log.subject,
             log.work_code,
             str(log.work_hours),
+            log.work_minute,
             log.date.strftime("%Y-%m-%d"),
         ]
         response.write(",".join(row).encode('shift_jis') + b"\r\n")

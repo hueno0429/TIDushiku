@@ -36,10 +36,11 @@ input[type="text"], input[type="date"], input[type="time"], input[type="number"]
 .edit-link{margin-top: 10px; width:120px; text-align: center; display:block; background:black; color:white; font-size: medium; border-radius: 5px; border:none; padding:5px 10px;}
 .edit-link:hover{background:rgb(132, 132, 132); color:black; font-size: medium; border-radius: 5px; border:none;}
 .sub_bt {
-    padding: 5px 10px;
+    padding: 10px 20px;
     background-color: #333;
     color: #fff;
     border: none;
+    text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -76,3 +77,30 @@ input[type="text"], input[type="date"], input[type="time"], input[type="number"]
 .tab.active{background-color: #eaeaea; border:1px solid dimgray;}
 .tab_content{display: none; padding: 10px; border-radius: 5px; }
 .tab_content.active{display: block;}
+
+/* for docs */
+.mokuji{position:fixed; padding:3px 5px; border-radius: 5px; background:rgb(186, 202, 207); width:300px; height:250px; overflow: auto; top:100; left:30px;}
+.mokuji a{font-size: large; text-align: left; text-decoration: none; color:dimgray;} .mokuji a:hover{text-decoration: underline; color:rgb(72, 72, 72);}
+.content{width:50%; padding:5px 10px;}
+
+/* WorkLog container */
+.wlog_summary{width:15%; background:rgb(202, 202, 202); border-radius: 10px; padding:5px 20px; padding-bottom: 20px;}
+.wlog_bt{text-decoration: none; color:dimgray;}.wlog_bt:hover{color:rgb(70, 70, 70); text-decoration: underline;}
+.wlog_summary-body{height:100px; overflow-y:scroll; background:rgb(231, 231, 231); border:1px solid rgb(219, 219, 219);}
+.wlog_c{padding: 5px 10px; padding-bottom:30px; width:50%; border-radius: 10px; border:2px solid rgb(192, 223, 226); background:rgb(235, 247, 255);}
+
+/* for noscript */
+noscript{position: fixed; top:0; left:0; right:0; bottom:0; background:white; padding:5px 10px;}
+
+.print_title{display:none;}
+.print_format{display:none;}
+
+@media print{
+    header{display:none;}
+    header .hm{display: none;}
+    header .hsu{display:none;}
+    footer{display:none;}
+    .printnot{display:none !important;}
+    .print_title{display:block; padding:5px 20px; border-radius: 10px; border: 2px solid dimgray;}
+    .print_format{display:block;}
+}

@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}作業指示票詳細{% endblock %}
+
+{% block content %}
+<main class="printnot">
+    <h1 class="titles printnot">作業指示票詳細</h1>
+    <a href="#" onclick="window.print(); return false;" class="printnot">印刷する</a>
+    <table style="margin: 0 auto;"border="1">
+        <tr>
+            <th>作業指示票番号</th>
+            <td>{{ work_order.work_order_number }}</td>
+        </tr>
+        <tr>
+            <th>発行日</th>
+            <td>{{ work_order.release_date }}</td>
+        </tr>
+        <tr>
+            <th>工番</th>
+            <td>{{ work_order.work_number }}</td>
+        </tr>
+        <tr>
+            <th>枝番</th>
+            <td>{{ work_order.work_trenum }}</td>
+        </tr>
+        <tr>
+            <th>件名</th>
+            <td>{{ work_order.subject }}</td>
+        </tr>
+        <tr>
+            <th>製造工程パタン</th>
+            <td>{{ work_order.process_pattern }}</td>
+        </tr>
+        <tr>
+            <th>製造管理担当者</th>
+            <td>{{ work_order.manager }}</td>
+        </tr>
+        <tr>
+            <th>製作グループ</th>
+            <td>{{ work_order.work_group }}</td>
+        </tr>
+        <tr>
+            <th>作業工数時間</th>
+            <td>{{ work_order.work_hours }}</td>
+        </tr>
+        <tr>
+            <th>次工程</th>
+            <td>{{ work_order.next_process }}</td>
+        </tr>
+        <tr>
+            <th>作業開始日</th>
+            <td>{{ work_order.start_date }}</td>
+        </tr>
+        <tr>
+            <th>終了予定日</th>
+            <td>{{ work_order.end_date }}</td>
+        </tr>
+        <tr>
+            <th>作業種別</th>
+            <td>{{ work_order.work_type }}</td>
+        </tr>
+        <tr>
+            <th>作業範囲</th>
+            <td>{{ work_order.work_range }}</td>
+        </tr>
+        <tr>
+            <th>計画数</th>
+            <td>{{ work_order.planed_value }}</td>
+        </tr>
+        <tr>
+            <th>承認</th>
+            <td>{{ work_order.syounin_check }}</td>
+        </tr>
+        <tr>
+            <th>作成</th>
+            <td>{{ work_order.publish_check }}</td>
+        </tr>
+        <tr>
+            <th>工数設定</th>
+            <td>{{ work_order.workset_check }}</td>
+        </tr>
+        <tr>
+            <th>購買確認</th>
+            <td>{{ work_order.buy_check }}</td>
+        </tr>
+        <tr>
+            <th>受け取り確認</th>
+            <td>{{ work_order.recive_check }}</td>
+        </tr>
+    </table>
+
+    <h1 class="titles">進捗状況</h1>
+    <table style="margin: 0 auto;"border="1">
+        <thead>
+            <tr>
+                <th>作業日</th>
+                <th>出来高（％）</th>
+                <th>当日実績</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for progress in progresses %}
+            <tr>
+                <td>{{ progress.work_date }}</td>
+                <td>{{ progress.achievement }}</td>
+                <td>{{ progress.daily_result }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">進捗データがありません。</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<br><br>
+    <a href="{% url 'sagyoshiji:work_order_list' %}" class="sub_bt printnot">一覧に戻る</a>
+</main>
+<div class="print_format">
+    <h1 class="print_title">作業指示票 / No.{{ work_order.work_order_number }}</h1>
+    <h3 align="left">発行日：<u>{{ work_order.release_date }}</u></h3>
+    <h1 align="center" style="text-decoration: underline;">件名　{{ work_order.subject }}</h1>
+    <h2 style="text-decoration: underline;">工番-枝番　{{ work_order.work_number }} - {{ work_order.work_trenum }}</h2>
+    <h3 style="text-decoration: underline;">製作グループ　{{ work_order.work_group }}</h3>
+
+    <div style="display: flex; justify-content: space-between;">
+        <div style="margin:0;">
+    <table border>
+        <tr><td><b>製造工程パターン</b></td><td>{{ work_order.process_pattern }}</td></tr>
+        <tr><td><b>製造管理担当者</b></td><td>{{ work_order.manager }}</td></tr>
+        <tr><td><b>作業工数時間</b></td><td>{{ work_order.work_hours }}</td></tr>
+        <tr><td><b>次工程</b></td><td>{{ work_order.next_process }}</td></tr>
+        <tr><td><b>作業開始日</b></td><td>{{ work_order.start_date }}</td></tr>
+        <tr><td><b>作業終了日</b></td><td>{{ work_order.end_date }}</td></tr>
+    </table>
+        </div>
+        <div style="margin:0;">
+            <div style="padding:5px 10px; width:auto; border:1px dashed rgb(74, 74, 74); border-radius:10px;">
+                {{ work_order.work_range }}
+                <br>
+                <h2 align="left">{{ work_order.work_type }}</h2>
+            </div>
+        </div>
+    </div>
+    <h3 align="left">計画本数：{{ work_order.planed_value }}</h3>
+    <br>
+    <table style="margin: 0 auto;"border="1">
+        <thead>
+            <tr>
+                <th>作業日</th>
+                <th>出来高（％）</th>
+                <th>当日実績</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for progress in progresses %}
+            <tr>
+                <td>{{ progress.work_date }}</td>
+                <td>{{ progress.achievement }}</td>
+                <td>{{ progress.daily_result }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">進捗データがありません。</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

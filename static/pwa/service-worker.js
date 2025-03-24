@@ -6,7 +6,7 @@
 const CACHE_NAME = 'shirayama-cache';
 const urlsToCache = ["/", "/static/css/style.css", "/static/svgs/add.svg", "/static/svgs/call.svg", 
 "/static/svgs/delete.svg", "/static/svgs/folder.svg", "/static/svgs/home.svg", "/static/svgs/info.svg", 
-"/static/svgs/question.svg", "/static/svgs/user.svg", "/static/ico/aaa.png", "/static/ico/bbb.png" 
+"/static/svgs/question.svg", "/static/svgs/user.svg", "/static/ico/shirayama_app_mm.png","/static/ico/shirayama_app_bm.png"
 ];
 
 self.addEventListener('install', function (e) {
